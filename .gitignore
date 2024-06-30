@@ -1,5 +1,6 @@
 mysql/
 book/
+pkg/
 
 # Created by https://www.toptal.com/developers/gitignore/api/macos,react,node,visualstudiocode
 # Edit at https://www.toptal.com/developers/gitignore?templates=macos,react,node,visualstudiocode
