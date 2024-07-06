@@ -1,9 +1,12 @@
 package main
 
 import (
+	"fmt"
 	config "my-app/config/db"
 	"my-app/handler"
 	"my-app/repository"
+	"net/http"
+	"path/filepath"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -11,11 +14,12 @@ import (
 
 func main() {
 	db := config.InitDB()
+	// マイグレーションを実行
+	if repository.BookDbAutoMigrate(db) != nil {
+		return
+	}
 	BookRepository := repository.NewBookDB(db)
 	bookHandler := handler.NewBookHandler(BookRepository)
-
-	// ハンドラーの初期化
-	//BookHandler := handler.NewWorkflowHandler(BookRepository)
 
 	router := gin.Default()
 
@@ -32,7 +36,18 @@ func main() {
 
 	// // CreateTask は、新しいタスクを作成するエンドポイントです。
 	router.POST("/book", bookHandler.CreateBook)
+	//router.MaxMultipartMemory = 8 << 20  // 8 MiB
+	router.POST("/upload", func(c *gin.Context) {
+		file, _ := c.FormFile("file")
+		savepath := filepath.Join("/book", file.Filename)
+		if err := c.SaveUploadedFile(file, savepath); err != nil {
+			c.String(http.StatusBadRequest, "upload file err: %s", err.Error())
+			return
+		}
+		bookHandler.CreateBook2(c, savepath)
+		c.String(http.StatusOK, fmt.Sprintf("'%s' uploaded!", file.Filename))
+	})
 
 	// サーバーの起動
-	router.Run(":8080")
+	router.Run(":5173")
 }

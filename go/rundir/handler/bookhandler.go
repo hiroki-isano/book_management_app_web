@@ -18,36 +18,52 @@ func NewBookHandler(repo *repository.BookRepository) *BookHandler {
 }
 
 func (h *BookHandler) CreateBook(c *gin.Context) {
-	var Book model.Book
-	if err := c.BindJSON(&Book); err != nil {
+	var bookModel model.Book
+	if err := c.BindJSON(&bookModel); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request body"})
 		return
 	}
 
-	Book.ID = uuid.New().String()
+	bookModel.UUID = uuid.New().String()
 
-	if err := h.Repo.CreateBook(&Book); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create task"})
+	if err := h.Repo.CreateBook(&bookModel); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create book"})
 		return
 	}
 
-	savedTask, err := h.Repo.GetTaskByID(Book.ID)
+	BookModelFormDB, err := h.Repo.GetBookByUUID(bookModel.UUID)
+
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to retrieve saved task"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to retrieve saved book"})
 		return
 	}
 
-	c.JSON(http.StatusCreated, savedTask)
+	c.JSON(http.StatusCreated, BookModelFormDB)
+}
+func (h *BookHandler) CreateBook2(c *gin.Context, FilePath string) error {
+	var bookModel model.Book
+	if err := c.Bind(&bookModel); err != nil {
+		return err
+	}
+	bookModel.UUID = uuid.New().String()
+	bookModel.FilePath = FilePath
+	if err := h.Repo.CreateBook(&bookModel); err != nil {
+		return err
+	}
+	if _, err := h.Repo.GetBookByUUID(bookModel.UUID); err != nil {
+		return err
+	}
+	return nil
 }
 
 func (h *BookHandler) GetTask(c *gin.Context) {
-	taskID := c.Param("id")
+	bookID := c.Param("id")
 
-	task, err := h.Repo.GetTaskByID(taskID)
+	book, err := h.Repo.GetBookByID(bookID)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to retrieve task"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to retrieve book"})
 		return
 	}
 
-	c.JSON(http.StatusOK, task)
+	c.JSON(http.StatusOK, book)
 }

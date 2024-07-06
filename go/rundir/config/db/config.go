@@ -20,14 +20,12 @@ type DBConfig struct {
 // InitDB は新しいデータベース接続を初期化して返します
 func InitDB() *gorm.DB {
 	config := DBConfig{
-		Host:     "192.168.0.120",
+		Host:     "mysql",
 		Port:     "3306",
 		User:     "root",
 		Password: "password123",
 		Name:     "sample",
 	}
-	//Host: "127.0.0.1",
-	//Host: "192.168.0.120",
 	// DSN（Data Source Name）を作成
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
 		config.User, config.Password, config.Host, config.Port, config.Name)
