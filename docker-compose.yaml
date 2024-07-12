@@ -1,17 +1,5 @@
 version: '1.0'
 services:
-    web_go_book_management:
-        container_name: "web_go_book_management"
-        build: .
-        volumes:
-            - "./go/:/go"
-            - "./book/:/book"
-        ports:
-            - "5173:5173"
-        tty: true # コンテナの永続化
-        depends_on:
-            - mysql_go_book_management
-        #privileged: true
     mysql_go_book_management:
         container_name: mysql_go_book_management
         hostname: mysql
@@ -25,4 +13,17 @@ services:
             - MYSQL_DATABASE=sample
         ports:
             - "3306:3306"
+    web_go_book_management:
+        container_name: "web_go_book_management"
+        build: .
+        volumes:
+            - "./go/:/go"
+            - "./book/:/book"
+        ports:
+            - "5173:5173"
+        tty: true # コンテナの永続化
+        depends_on:
+            - mysql_go_book_management
+        #privileged: true
+
 
