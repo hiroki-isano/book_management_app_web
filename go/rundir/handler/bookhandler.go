@@ -1,9 +1,12 @@
 package handler
 
 import (
+	"fmt"
+	"my-app/lib"
 	"my-app/model"
 	"my-app/repository"
 	"net/http"
+	"path/filepath"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
@@ -17,43 +20,32 @@ func NewBookHandler(repo *repository.BookRepository) *BookHandler {
 	return &BookHandler{Repo: repo}
 }
 
-func (h *BookHandler) CreateBook(c *gin.Context) {
+func (h *BookHandler) CreateBook(ginContext *gin.Context) { //error {
 	var bookModel model.Book
-	if err := c.BindJSON(&bookModel); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request body"})
-		return
-	}
-
-	bookModel.UUID = uuid.New().String()
-
-	if err := h.Repo.CreateBook(&bookModel); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create book"})
-		return
-	}
-
-	BookModelFormDB, err := h.Repo.GetBookByUUID(bookModel.UUID)
-
+	file, err := ginContext.FormFile("file")
+	bookfilePath := filepath.Join("/book", file.Filename)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to retrieve saved book"})
-		return
+		ginContext.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to upload book data"})
+		return //return err
 	}
-
-	c.JSON(http.StatusCreated, BookModelFormDB)
-}
-func (h *BookHandler) CreateBook2(c *gin.Context, FilePath string) error {
-	var bookModel model.Book
-	if err := c.Bind(&bookModel); err != nil {
-		return err
+	if err := lib.SaveUploadedFileForBook(ginContext, file, bookfilePath); err != nil {
+		ginContext.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to upload book data"})
+		return //return err
 	}
-	bookModel.UUID = uuid.New().String()
-	bookModel.FilePath = FilePath
+	if _, err := bindBookModel(ginContext, &bookModel, bookfilePath); err != nil {
+		ginContext.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to bind book data"})
+		return //return err
+	}
 	if err := h.Repo.CreateBook(&bookModel); err != nil {
-		return err
+		ginContext.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create book data"})
+		return //return err
 	}
 	if _, err := h.Repo.GetBookByUUID(bookModel.UUID); err != nil {
-		return err
+		ginContext.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to retrieve saved book"})
+		return //return err
 	}
-	return nil
+	ginContext.String(http.StatusOK, fmt.Sprintf("'%s' uploaded!", file.Filename))
+	//return //return nil
 }
 
 func (h *BookHandler) GetTask(c *gin.Context) {
@@ -67,3 +59,31 @@ func (h *BookHandler) GetTask(c *gin.Context) {
 
 	c.JSON(http.StatusOK, book)
 }
+
+func bindBookModel(c *gin.Context, bookModel *model.Book, filePath string) (*model.Book, error) {
+	if err := c.Bind(bookModel); err != nil {
+		return nil, err
+	}
+	bookModel.UUID = uuid.New().String()
+	bookModel.FilePath = filePath
+	return bookModel, nil
+}
+
+// func isValidFilename(filename string) bool {
+//     // 許可する文字を定義 (例: アルファベット、数字、ハイフン、アンダースコア)
+//     allowedChars := "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_"
+
+//     // ディレクトリトラバーサルを防ぐ
+//     if strings.Contains(filename, "..") {
+//         return false
+//     }
+
+//     // 許可されていない文字が含まれているかチェック
+//     for _, char := range filename {
+//         if !unicode.IsLetter(char) && !unicode.IsNumber(char) && char != '-' && char != '_' {
+//             return false
+//         }
+//     }
+
+//     return true
+// }
