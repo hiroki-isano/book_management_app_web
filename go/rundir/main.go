@@ -33,9 +33,13 @@ func main() {
 
 	// // CreateTask は、新しいタスクを作成するエンドポイントです。
 	//router.POST("/book", bookHandler.CreateBook)
-	//router.MaxMultipartMemory = 8 << 20  // 8 MiB
+
 	router.POST("/upload", bookHandler.CreateBook)
+
+	router.GET("/download/:id", bookHandler.GetBookByID)
 
 	// サーバーの起動
 	router.Run(":5173")
 }
+
+//router.MaxMultipartMemory = 8 << 20  // 8 MiB

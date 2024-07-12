@@ -20,44 +20,53 @@ func NewBookHandler(repo *repository.BookRepository) *BookHandler {
 	return &BookHandler{Repo: repo}
 }
 
-func (h *BookHandler) CreateBook(ginContext *gin.Context) { //error {
+func (h *BookHandler) CreateBook(ginContext *gin.Context) {
 	var bookModel model.Book
 	file, err := ginContext.FormFile("file")
 	bookfilePath := filepath.Join("/book", file.Filename)
 	if err != nil {
 		ginContext.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to upload book data"})
-		return //return err
+		return
 	}
 	if err := lib.SaveUploadedFileForBook(ginContext, file, bookfilePath); err != nil {
 		ginContext.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to upload book data"})
-		return //return err
+		return
 	}
 	if _, err := bindBookModel(ginContext, &bookModel, bookfilePath); err != nil {
 		ginContext.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to bind book data"})
-		return //return err
+		return
 	}
 	if err := h.Repo.CreateBook(&bookModel); err != nil {
 		ginContext.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create book data"})
-		return //return err
+		return
 	}
 	if _, err := h.Repo.GetBookByUUID(bookModel.UUID); err != nil {
 		ginContext.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to retrieve saved book"})
-		return //return err
+		return
 	}
 	ginContext.String(http.StatusOK, fmt.Sprintf("'%s' uploaded!", file.Filename))
-	//return //return nil
 }
 
 func (h *BookHandler) GetTask(c *gin.Context) {
 	bookID := c.Param("id")
-
 	book, err := h.Repo.GetBookByID(bookID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to retrieve book"})
 		return
 	}
-
 	c.JSON(http.StatusOK, book)
+}
+func (h *BookHandler) GetBookByID(ginContext *gin.Context) {
+	bookModel, err := h.Repo.GetBookByID(ginContext.Param("id"))
+	if bookModel == nil {
+		ginContext.String(http.StatusOK, fmt.Sprintf("id : '%s' : Not found book", ginContext.Param("id")))
+		return
+	}
+	if err != nil {
+		ginContext.String(http.StatusOK, fmt.Sprintf("id : '%s' : Not found book", ginContext.Param("id")))
+		return
+	}
+	ginContext.File(bookModel.FilePath)
 }
 
 func bindBookModel(c *gin.Context, bookModel *model.Book, filePath string) (*model.Book, error) {
