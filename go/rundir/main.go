@@ -11,13 +11,13 @@ import (
 
 func main() {
 	db := config.InitDB()
-	// マイグレーションを実行
-	if repository.BookDbAutoMigrate(db) != nil {
+
+	if repository.BookDbAutoMigrate(db) != nil { // マイグレーションを実行
 		return
 	}
+
 	BookRepository := repository.NewBookDB(db)
 	bookHandler := handler.NewBookHandler(BookRepository)
-
 	router := gin.Default()
 
 	// CORS設定
@@ -27,12 +27,6 @@ func main() {
 		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
 		AllowCredentials: true,
 	}))
-
-	// GetTask は、指定されたIDを持つ特定のタスクを取得するエンドポイントです。
-	// router.GET("/book/:id", taskHandler.GetTask)
-
-	// // CreateTask は、新しいタスクを作成するエンドポイントです。
-	//router.POST("/book", bookHandler.CreateBook)
 
 	router.POST("/upload", bookHandler.CreateBook)
 

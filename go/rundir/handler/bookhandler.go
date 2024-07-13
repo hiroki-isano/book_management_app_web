@@ -47,15 +47,6 @@ func (h *BookHandler) CreateBook(ginContext *gin.Context) {
 	ginContext.String(http.StatusOK, fmt.Sprintf("'%s' uploaded!", file.Filename))
 }
 
-func (h *BookHandler) GetTask(c *gin.Context) {
-	bookID := c.Param("id")
-	book, err := h.Repo.GetBookByID(bookID)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to retrieve book"})
-		return
-	}
-	c.JSON(http.StatusOK, book)
-}
 func (h *BookHandler) GetBookByID(ginContext *gin.Context) {
 	bookModel, err := h.Repo.GetBookByID(ginContext.Param("id"))
 	if bookModel == nil {
@@ -66,6 +57,7 @@ func (h *BookHandler) GetBookByID(ginContext *gin.Context) {
 		ginContext.String(http.StatusOK, fmt.Sprintf("id : '%s' : Not found book", ginContext.Param("id")))
 		return
 	}
+	//ginContext.JSON(http.StatusOK, bookModel)
 	ginContext.File(bookModel.FilePath)
 }
 
