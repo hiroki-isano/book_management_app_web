@@ -3,3 +3,10 @@ npm init
 npm install typescript
 npm install react --save　※--save は package.json ファイルが自動的に更新されます。
 npx create-react-app my-app --template typescript
+
+npm install axios
+npm install -D tailwindcss postcss autoprefixer
+npx tailwindcss init
+
+cd book-management
+ npm start
