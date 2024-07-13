@@ -1,0 +1,5 @@
+cd {作業ディレクトリ}
+npm init
+npm install typescript
+npm install react --save　※--save は package.json ファイルが自動的に更新されます。
+npx create-react-app my-app --template typescript

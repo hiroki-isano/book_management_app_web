@@ -25,5 +25,17 @@ services:
         depends_on:
             - mysql_go_book_management
         #privileged: true
+    front:
+        build: ./react/ 
+        container_name: web_react_book_management 
+        volumes:
+        - ./react/front:/front #docker内と共有するフォルダの指定
+        working_dir: /front #docker内に入った時の初期パスの指定
+        ports:
+        - 3000:3000 #コンテナにバインドするポートの指定（左:自分のPCポート、右:dookerコンテナのポート）
+        tty: true #コンテナが勝手に終了しないための設定
+        stdin_open: true #標準入出力とエラー出力をコンテナに結びつける設定
+        environment:
+        - CHOKIDAR_USEPOLLING=true #ホットリロードを行う設定
 
 
