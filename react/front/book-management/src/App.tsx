@@ -10,16 +10,16 @@ function BookForm() {
     event.preventDefault();
 
     const formData = new FormData();
-    formData.append('title', title);
-    formData.append('description', description);
+    formData.append('Title', title);
+    formData.append('Description', description);
     if(file)formData.append('file', file);
 
     try {
-      const response = await axios.post('/api/books', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      });
+      //http://192.168.0.120:5173/upload
+      //const response = await axios.post('/api/books', formData, {
+      //Failed to load resource: Origin http://localhost:3000 is not allowed by Access-Control-Allow-Origin. Status code: 403
+      //const response = await axios.post('http://192.168.0.120:5173/upload', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
+      const response = await axios.post('http://localhost:5173/upload', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
       console.log('Book created:', response.data);
     } catch (error) {
       console.error('Error creating book:', error);
