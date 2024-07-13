@@ -19,6 +19,7 @@ func main() {
 	BookRepository := repository.NewBookDB(db)
 	bookHandler := handler.NewBookHandler(BookRepository)
 	router := gin.Default()
+	//router.MaxMultipartMemory = 8 << 20  // 8 MiB
 
 	// CORS設定
 	router.Use(cors.New(cors.Config{
@@ -35,5 +36,3 @@ func main() {
 	// サーバーの起動
 	router.Run(":5173")
 }
-
-//router.MaxMultipartMemory = 8 << 20  // 8 MiB
