@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import Header from './component/UpperMenu';
+
 
 function BookForm() {
   const [title, setTitle] = useState('');
@@ -27,23 +29,26 @@ function BookForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <label>
-        Title:
-        <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} />
-      </label>
-      <label>
-        Description:
-        <textarea value={description} onChange={(e) => setDescription(e.target.value)} />
-      </label>
-      <label>
-        PDF File:
-        <input type="file" accept="application/pdf" onChange={(e:React.ChangeEvent<HTMLInputElement>) =>{ 
-          if (e && e.target && e.target.files) setFile(e.target.files[0]);
-        }} />
-      </label>
-      <button type="submit">Create Book</button>
-    </form>
+    <>
+      <Header />
+      <form onSubmit={handleSubmit}>
+        <label>
+          Title:
+          <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} />
+        </label>
+        <label>
+          Description:
+          <textarea value={description} onChange={(e) => setDescription(e.target.value)} />
+        </label>
+        <label>
+          PDF File:
+          <input type="file" accept="application/pdf" onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            if (e && e.target && e.target.files) setFile(e.target.files[0]);
+          }} />
+        </label>
+        <button type="submit">Create Book</button>
+      </form>
+    </>
   );
 }
 
