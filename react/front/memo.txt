@@ -10,3 +10,6 @@ npx tailwindcss init
 
 cd book-management
  npm start
+
+npm install --save @types/react-router-dom
+ npm install --save react-router-dom
