@@ -28,18 +28,18 @@ function BookForm() {
     <>
       <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
         <label className="flex items-center space-x-2">
-          <span className="font-medium">Title:</span>
+          <span className="font-medium">Book Title:</span>
           <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} 
           className="rounded-md border border-gray-300 p-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50"/>
         </label>
         <label className="flex items-center space-x-2">
-          Description:
+          Book Description:
           <textarea value={description} onChange={(e) => setDescription(e.target.value)} 
             className="rounded-md border border-gray-300 p-2 h-24 resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50"
             />
         </label>
         <label  className="flex items-center space-x-2">
-          PDF File:
+          Book or PDF File:
           <input type="file" accept="application/pdf" onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             if (e && e.target && e.target.files) setFile(e.target.files[0]);
           }}
