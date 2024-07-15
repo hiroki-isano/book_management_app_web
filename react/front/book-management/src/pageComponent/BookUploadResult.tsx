@@ -6,7 +6,6 @@ import { useLocation } from 'react-router-dom';
 
 function BookUploadResult() {
   const location = useLocation();
-
   return (
     <>
       <Header />
