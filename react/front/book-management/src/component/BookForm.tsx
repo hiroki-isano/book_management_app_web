@@ -8,17 +8,30 @@ function BookForm() {
   const [description, setDescription] = useState('');
   const [file, setFile] = useState<File | null>(null);
 
+  const [isPosted, setPostedFlg] = useState(false);
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (isPosted){ alert("送信済みです"); return; }
+    if (!title) { alert("タイトルを指定してください"); return; }
+    if (!file) { alert("ファイルを指定してください"); return; } 
+    setPostedFlg(true);
 
     const formData = new FormData();
     formData.append('Title', title);
     formData.append('Description', description);
-    if (file) formData.append('file', file);
+    formData.append('file', file);
 
     try {
-      const response = await axios.post('http://localhost:5173/upload', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
-      console.log('Book created:', response.data);
+      //const response = await axios.post('http://localhost:5173/upload', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
+      //console.log('Book created:', response.data);
+      axios.post('http://localhost:5173/upload', formData, { headers: { 'Content-Type': 'multipart/form-data' } })
+      .then(response => {
+        console.log('Book created:', response.data);// レスポンス処理
+      })
+      .catch(error => {
+        console.log('error:', error);// エラーハンドリング
+      });
     } catch (error) {
       console.error('Error creating book:', error);
     }
