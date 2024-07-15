@@ -3,6 +3,7 @@ import axios from 'axios';
 import Header from '../component/UpperMenu';
 import BookForm from '../component/BookForm';
 import { useLocation } from 'react-router-dom';
+import { book_list_path, book_upload_path } from '../App';
 
 function BookUploadResult() {
   const location = useLocation();
@@ -16,6 +17,10 @@ function BookUploadResult() {
         <p>アップロード失敗しました。</p>
       )}
     </div>
+      <ul>
+        <li><a href={book_list_path} className="hover:underline">・Book List</a></li>
+        <li><a href={book_upload_path} className="hover:underline">・Upload Book</a></li>
+      </ul>
     </>
   );
 }
