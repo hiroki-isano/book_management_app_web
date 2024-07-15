@@ -45,6 +45,7 @@ function BookForm() {
 
   return (
     <>
+      <h3 className="text-3xl font-bold dark:text-white">upLoad Book Page</h3>
       <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
         <label className="flex items-center space-x-2">
           <span className="font-medium">Book Title:</span>
