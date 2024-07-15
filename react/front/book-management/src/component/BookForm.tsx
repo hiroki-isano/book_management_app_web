@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import Header from '../component/UpperMenu';
+import { useNavigate } from "react-router-dom";
+import { book_upload_result_path } from '../App';
 
 
 function BookForm() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [file, setFile] = useState<File | null>(null);
+  const navigate = useNavigate();
 
   const [isPosted, setPostedFlg] = useState(false);
 
@@ -27,7 +30,11 @@ function BookForm() {
       //console.log('Book created:', response.data);
       axios.post('http://localhost:5173/upload', formData, { headers: { 'Content-Type': 'multipart/form-data' } })
       .then(response => {
-        console.log('Book created:', response.data);// レスポンス処理
+        console.log('Book created 123 :', response.data);// レスポンス処理
+        console.log('Book created:', response.status);// レスポンス処理
+        //if(response.status=200){
+        //navigate(book_upload_result_path);
+        navigate(book_upload_result_path,response.data);
       })
       .catch(error => {
         console.log('error:', error);// エラーハンドリング
