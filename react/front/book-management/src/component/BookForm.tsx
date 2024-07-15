@@ -30,14 +30,13 @@ function BookForm() {
       //console.log('Book created:', response.data);
       axios.post('http://localhost:5173/upload', formData, { headers: { 'Content-Type': 'multipart/form-data' } })
       .then(response => {
-        console.log('Book created 123 :', response.data);// レスポンス処理
+        console.log('Book created :', response.data);// レスポンス処理
         console.log('Book created:', response.status);// レスポンス処理
-        //if(response.status=200){
-        //navigate(book_upload_result_path);
-        navigate(book_upload_result_path,response.data);
+        navigate(book_upload_result_path,{ state: response.status });
       })
       .catch(error => {
         console.log('error:', error);// エラーハンドリング
+        navigate(book_upload_result_path,{ state: error });
       });
     } catch (error) {
       console.error('Error creating book:', error);
