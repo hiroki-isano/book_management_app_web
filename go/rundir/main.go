@@ -28,7 +28,7 @@ func main() {
 	router.POST("/upload", bookHandler.CreateBook)
 	router.GET("/download/:id", bookHandler.GetBookByID)
 
-	router.GET("/download/:id", bookHandler.GetAllBook)
+	router.GET("/getAllBook/", bookHandler.GetAllBook)
 
 	// サーバーの起動
 	router.Run(":5173")
