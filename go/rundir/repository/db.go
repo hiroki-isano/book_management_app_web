@@ -27,6 +27,11 @@ func (r *BookRepository) GetBookByID(id string) (*model.Book, error) {
 	err := r.DB.First(&bookModel, "id = ?", id).Error
 	return &bookModel, err
 }
+func (r *BookRepository) GetAllTasks() ([]*model.Book, error) {
+	var tasks []*model.Book
+	err := r.DB.Find(&tasks).Error
+	return tasks, err
+}
 func (r *BookRepository) GetBookByUUID(id string) (*model.Book, error) {
 	var bookModel model.Book
 	err := r.DB.First(&bookModel, "uuid = ?", id).Error

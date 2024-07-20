@@ -11,16 +11,13 @@ import (
 
 func main() {
 	db := config.InitDB()
-
 	if repository.BookDbAutoMigrate(db) != nil { // マイグレーションを実行
 		return
 	}
-
 	BookRepository := repository.NewBookDB(db)
 	bookHandler := handler.NewBookHandler(BookRepository)
 	router := gin.Default()
 	//router.MaxMultipartMemory = 8 << 20  // 8 MiB
-
 	// CORS設定
 	router.Use(cors.New(cors.Config{
 		AllowOrigins:     []string{"http://localhost:5173", "http://localhost:3000"},
@@ -28,10 +25,10 @@ func main() {
 		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
 		AllowCredentials: true,
 	}))
-
 	router.POST("/upload", bookHandler.CreateBook)
-
 	router.GET("/download/:id", bookHandler.GetBookByID)
+
+	router.GET("/download/:id", bookHandler.GetAllBook)
 
 	// サーバーの起動
 	router.Run(":5173")

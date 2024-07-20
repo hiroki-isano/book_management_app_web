@@ -50,15 +50,23 @@ func (h *BookHandler) CreateBook(ginContext *gin.Context) {
 func (h *BookHandler) GetBookByID(ginContext *gin.Context) {
 	bookModel, err := h.Repo.GetBookByID(ginContext.Param("id"))
 	if bookModel == nil {
-		ginContext.String(http.StatusOK, fmt.Sprintf("id : '%s' : Not found book", ginContext.Param("id")))
+		ginContext.String(http.StatusInternalServerError, fmt.Sprintf("id : '%s' : Not found book", ginContext.Param("id")))
 		return
 	}
 	if err != nil {
-		ginContext.String(http.StatusOK, fmt.Sprintf("id : '%s' : Not found book", ginContext.Param("id")))
+		ginContext.String(http.StatusInternalServerError, fmt.Sprintf("id : '%s' : Not found book", ginContext.Param("id")))
 		return
 	}
 	//ginContext.JSON(http.StatusOK, bookModel)
 	ginContext.File(bookModel.FilePath)
+}
+func (h *BookHandler) GetAllBook(ginContext *gin.Context) {
+	bookModels, err := h.Repo.GetAllTasks()
+	if err != nil {
+		ginContext.JSON(http.StatusInternalServerError, gin.H{"error": "err :Error in get book "})
+		return
+	}
+	ginContext.JSON(http.StatusOK, bookModels)
 }
 
 func bindBookModel(c *gin.Context, bookModel *model.Book, filePath string) (*model.Book, error) {
