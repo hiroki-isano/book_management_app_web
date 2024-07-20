@@ -10,7 +10,6 @@ function BookForm() {
   const [description, setDescription] = useState('');
   const [file, setFile] = useState<File | null>(null);
   const navigate = useNavigate();
-
   const [isPosted, setPostedFlg] = useState(false);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -26,8 +25,6 @@ function BookForm() {
     formData.append('file', file);
 
     try {
-      //const response = await axios.post('http://localhost:5173/upload', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
-      //console.log('Book created:', response.data);
       axios.post('http://localhost:5173/upload', formData, { headers: { 'Content-Type': 'multipart/form-data' } })
       .then(response => {
         console.log('Book created :', response.data);// レスポンス処理
@@ -73,7 +70,6 @@ function BookForm() {
     </>
   );
 }
-
 export default BookForm;
 
 // <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
