@@ -27,7 +27,7 @@ func main() {
 	}))
 	router.POST("/upload", bookHandler.CreateBook)
 	router.GET("/download/:id", bookHandler.GetBookByID)
-
+	router.DELETE("/delete/:id", bookHandler.DeleteBookByID)
 	router.GET("/getAllBook/", bookHandler.GetAllBook)
 
 	// サーバーの起動

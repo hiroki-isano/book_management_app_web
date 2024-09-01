@@ -1,7 +1,7 @@
 version: '1.0'
 services:
-    mysql_go_book_management:
-        container_name: mysql_go_book_management
+    mysql_db_book_management:
+        container_name: mysql_db_book_management
         hostname: mysql
         image: mysql:8.3
         platform: linux/amd64
@@ -23,7 +23,7 @@ services:
             - "5173:5173"
         tty: true # コンテナの永続化
         depends_on:
-            - mysql_go_book_management
+            - mysql_db_book_management
         #privileged: true
     front:
         build: ./react/ 

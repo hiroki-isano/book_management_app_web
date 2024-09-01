@@ -22,15 +22,18 @@ func NewBookDB(db *gorm.DB) *BookRepository {
 func (r *BookRepository) CreateBook(Book *model.Book) error {
 	return r.DB.Create(Book).Error
 }
+func (r *BookRepository) DeleteBook(id string) error {
+	return r.DB.Delete(&model.Book{}, id).Error
+}
 func (r *BookRepository) GetBookByID(id string) (*model.Book, error) {
 	var bookModel model.Book
 	err := r.DB.First(&bookModel, "id = ?", id).Error
 	return &bookModel, err
 }
-func (r *BookRepository) GetAllTasks() ([]*model.Book, error) {
-	var tasks []*model.Book
-	err := r.DB.Find(&tasks).Error
-	return tasks, err
+func (r *BookRepository) GetAllBooks() ([]*model.Book, error) {
+	var Books []*model.Book
+	err := r.DB.Find(&Books).Error
+	return Books, err
 }
 func (r *BookRepository) GetBookByUUID(id string) (*model.Book, error) {
 	var bookModel model.Book

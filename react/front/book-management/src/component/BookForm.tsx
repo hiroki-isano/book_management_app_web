@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import Header from '../component/UpperMenu';
 import { useNavigate } from "react-router-dom";
-import { book_upload_result_path } from '../App';
+import { book_upload_result_path,book_list_path } from '../App';
 
 
 function BookForm() {
@@ -29,11 +29,11 @@ function BookForm() {
       .then(response => {
         console.log('Book created :', response.data);// レスポンス処理
         console.log('Book created:', response.status);// レスポンス処理
-        navigate(book_upload_result_path,{ state: response.status });
+        navigate(book_list_path,{ state: response.status });
       })
       .catch(error => {
         console.log('error:', error);// エラーハンドリング
-        navigate(book_upload_result_path,{ state: error });
+        navigate(book_list_path,{ state: error });
       });
     } catch (error) {
       console.error('Error creating book:', error);

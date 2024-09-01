@@ -57,11 +57,26 @@ func (h *BookHandler) GetBookByID(ginContext *gin.Context) {
 		ginContext.String(http.StatusInternalServerError, fmt.Sprintf("id : '%s' : Not found book", ginContext.Param("id")))
 		return
 	}
-	//ginContext.JSON(http.StatusOK, bookModel)
 	ginContext.File(bookModel.FilePath)
 }
+func (h *BookHandler) DeleteBookByID(ginContext *gin.Context) {
+	bookModel, err := h.Repo.GetBookByID(ginContext.Param("id"))
+	if err != nil {
+		ginContext.String(http.StatusInternalServerError, fmt.Sprintf("id : '%s' : Not found book", ginContext.Param("id")))
+		return
+	}
+	if lib.DeleteFile(bookModel.FilePath) != nil {
+		ginContext.String(http.StatusInternalServerError, fmt.Sprintf("id : '%s' : failure delet file ", ginContext.Param("id")))
+		return
+	}
+	if h.Repo.DeleteBook(ginContext.Param("id")) != nil {
+		ginContext.String(http.StatusInternalServerError, fmt.Sprintf("id : '%s' : Not found book", ginContext.Param("id")))
+		return
+	}
+	ginContext.String(http.StatusOK, fmt.Sprintf("'%s' delet!", ginContext.Param("id")))
+}
 func (h *BookHandler) GetAllBook(ginContext *gin.Context) {
-	bookModels, err := h.Repo.GetAllTasks()
+	bookModels, err := h.Repo.GetAllBooks()
 	if err != nil {
 		ginContext.JSON(http.StatusInternalServerError, gin.H{"error": "err :Error in get book "})
 		return
