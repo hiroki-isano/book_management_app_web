@@ -6,6 +6,8 @@ WORKDIR /flask
 ENV FLASK_APP=app.py
 # requirements.txtから依存パッケージをインストール
 COPY requirements.txt requirements.txt
+# RUN apt update
+# RUN apt install poppler-utils PyPDF2
 RUN pip install -r requirements.txt
 # コマンドを実行 (Flaskアプリを起動)
 CMD ["flask","run", "--host=0.0.0.0", "-p", "7200", "--debugger", "--reload"]
