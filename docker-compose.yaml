@@ -37,5 +37,14 @@ services:
         stdin_open: true #標準入出力とエラー出力をコンテナに結びつける設定
         environment:
         - CHOKIDAR_USEPOLLING=true #ホットリロードを行う設定
+    web_python_book_management:
+        container_name: web_python_book_management
+        volumes:
+        - "./book/:/book"
+        - "./flask/book-management-flask:/flask"
+        ports:
+        - 7200:7200
+        build: ./flask/.
+        tty: true
 
 
