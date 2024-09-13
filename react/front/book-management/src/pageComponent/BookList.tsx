@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import Header from '../component/UpperMenu';
-import BookForm from '../component/BookForm';
+import Header from '../component/Menu';
+import BookUpLoadForm from '../component/BookUploadForm';
 // Book 型の定義 (GORM のモデルに対応)
 interface Book {
   id: number;
@@ -41,11 +41,11 @@ function BookList() {
       <table className="table-fixed">
         <thead>
           <tr>
-            <th className="w-1/2 px-4 py-2">id</th>
-            <th className="w-1/4 px-4 py-2">Title</th>
-            <th className="w-1/4 px-4 py-2">Author</th>
-            <th className="w-1/4 px-4 py-2">URL</th>
-            <th className="w-1/4 px-4 py-2">Del</th>
+            <th className="w-1/2 px-4 py-2 border">id</th>
+            <th className="w-1/4 px-4 py-2 border">Title</th>
+            {/* <th className="w-1/4 px-4 py-2">Author</th> */}
+            <th className="w-1/4 px-4 py-2 border">URL</th>
+            <th className="w-1/4 px-4 py-2 border">Del</th>
           </tr>
         </thead>
         <tbody>
@@ -53,7 +53,7 @@ function BookList() {
             <tr>
               <td className="border px-4 py-2">{book.id}</td>
               <td className="border px-4 py-2">{book.title}</td>
-              <td className="border px-4 py-2">{book.author}</td>
+              {/* <td className="border px-4 py-2">{book.author}</td> */}
               <td className="border px-4 py-2"><a href={"http://192.168.0.120:5173/download/"+book.id}>link</a></td>
               {/* <td className="border px-4 py-2"><a href={"http://192.168.0.120:5173/delete/"+book.id}>Del</a></td> */}
               
